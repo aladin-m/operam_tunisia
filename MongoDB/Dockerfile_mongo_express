@@ -1,0 +1,11 @@
+# Use the official mongo-express image as the base
+FROM mongo-express:1.0.0-18-alpine3.18
+
+ENV ME_CONFIG_MONGODB_ADMINUSERNAME=admin \
+    ME_CONFIG_MONGODB_ADMINPASSWORD=password \
+    ME_CONFIG_MONGODB_SERVER=mongodb
+    
+# Expose the mongo-express port if necessary
+EXPOSE 8081
+
+

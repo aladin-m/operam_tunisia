@@ -1,0 +1,54 @@
+version: '3'
+services:
+  operam_tunisia_front:
+    container_name: operam_tunisia_front
+    image: aladinm/operam_tunisia_front:V1.0
+    build:
+      context: ./operam_tunisia_front
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" # Assuming React runs on port 3000, adjust if needed
+
+  operam_tunisia_back:
+    image: aladinm/operam_tunisia_back:V1.0
+    container_name: operam_tunisia_back
+    build:
+      context: ./operam_tunisia_back
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000" # Assuming Django runs on port 8000, adjust if needed
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    environment:
+      - MONGO_DB_URI=mongodb://mongodb:27017/OperamTunisia 
+
+  mongodb:
+    image: aladinm/operam_tunisia_mongodb:V1.0
+    container_name: operam_tunisia_mongodb
+    build:
+      context: ./MongoDB
+      dockerfile: Dockerfile_MongoDB
+    ports:
+      - "27017:27017" # MongoDB default port
+    volumes:
+      - MongoDb_Data:/data/db
+
+  mongo_express:
+    image: aladinm/operam_tunisia_mongo_express:V1.0
+    container_name: operam_tunisia_mongo_express
+    build:
+      context: ./MongoDB
+      dockerfile: Dockerfile_mongo_express
+    restart: always # fixes MongoNetworkError when mongodb is not ready when mongo-express starts
+    ports:
+      - 8080:8081
+    # environment:
+    #   - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+    #   - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+    #   - ME_CONFIG_MONGODB_SERVER=mongodb
+
+volumes:
+  MongoDb_Data:
+    driver: local

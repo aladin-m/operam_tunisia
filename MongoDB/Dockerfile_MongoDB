@@ -1,0 +1,11 @@
+# Use the official MongoDB image as the base
+FROM mongo:7.0.4
+
+ENV MONGO_INITDB_ROOT_USERNAME=admin \
+    MONGO_INITDB_ROOT_PASSWORD=password
+    
+# Expose the MongoDB port if necessary
+EXPOSE 27017
+
+# Set the command to start MongoDB
+CMD ["mongod"]
